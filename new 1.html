@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ryven’s Epic Soundboard</title>
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #111;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Container for intro and loading bar */
+    #intro-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      user-select: none;
+    }
+
+    /* Intro text */
+    #intro-text {
+      font-size: 5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow-slide 3s linear forwards;
+      opacity: 1;
+      margin-bottom: 40px;
+    }
+
+    @keyframes rainbow-slide {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    /* Loading bar container - hidden initially */
+    #loading-bar-container {
+      width: 60%;
+      height: 20px;
+      border-radius: 10px;
+      background: #222;
+      overflow: hidden;
+      position: relative;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 1s ease, opacity 1s ease;
+    }
+
+    /* Loading bar itself */
+    #loading-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 300% 100%;
+      animation: movebar 2s linear infinite;
+      border-radius: 10px;
+    }
+
+    @keyframes movebar {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Main content hidden initially */
+    #main-content {
+      display: none;
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      animation: fadeInContent 1s forwards;
+      color: white;
+    }
+
+    @keyframes fadeInContent {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow-slide 5s linear infinite;
+    }
+
+    .rainbow-text {
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 35px;
+      background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 5s linear infinite;
+      text-shadow: 0 0 10px white;
+    }
+
+    @keyframes rainbow {
+      0% {background-position: 0% 50%;}
+      100% {background-position: 100% 50%;}
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    iframe {
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    iframe:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      z-index: 2;
+    }
+
+    .bio {
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .bio span {
+      background: linear-gradient(to right, pink, cyan, yellow, lime);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-top: 50px;
+      padding-bottom: 20px;
+    }
+
+    /* Tutorial overlay */
+    #tutorial-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.4rem;
+      line-height: 1.5;
+    }
+
+    #tutorial-overlay button {
+      margin-top: 30px;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      color: black;
+      font-weight: 700;
+      transition: background 0.3s ease;
+    }
+    #tutorial-overlay button:hover {
+      background: linear-gradient(90deg, violet, indigo, blue, green, yellow, orange, red);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Intro and loading container -->
+  <div id="intro-container">
+    <div id="intro-text">RYVEN</div>
+    <div id="loading-bar-container" aria-label="Loading progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+      <div id="loading-bar"></div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div id="main-content">
+    <h1>🌟 Ryven’s Epic Soundboard 🌟</h1>
+    <div class="rainbow-text">🎧 Click a button, vibe with the chaos 🎧</div>
+
+    <div class="buttons">
+      <iframe width="110" height="200" src="https://www.myinstants.com/instant/tuco-get-out-30566/embed/" frameborder="0" scrolling="no"></iframe>
+      <iframe width="110" height="200" src="https://www.myinstants.com/instant/discord-leave-noise-46083/embed/" frameborder="0" scrolling="no"></iframe>
+      <iframe width="110" height="200" src="https://www.myinstants.com/instant/social-credit-music-63796/embed/" frameborder="0" scrolling="no"></iframe>
+    </div>
+
+    <div class="bio">
+      Hiii 👋 I'm <span>Ryven</span> — a chaotic creative with a love for memes, colors, and internet noise 🌈🎶  
+      This soundboard is my little digital corner of ✨fun✨, so smash those buttons and let the madness begin 💥🦄
+    </div>
+
+    <footer>
+      🌈 Made with ❤️ and sparkles by Ryven ✨
+    </footer>
+  </div>
+
+  <!-- Tutorial overlay -->
+  <div id="tutorial-overlay" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+    <p id="tutorial-title">Welcome! To use the soundboard, just click on any button to play sounds. 🎶</p>
+    <p>Hover over buttons to see them expand! Have fun! 😎</p>
+    <button id="tutorial-close-btn">Got it!</button>
+  </div>
+
+<script>
+  const introText = document.getElementById('intro-text');
+  const loadingBarContainer = document.getElementById('loading-bar-container');
+  const loadingBar = document.getElementById('loading-bar');
+  const introContainer = document.getElementById('intro-container');
+  const mainContent = document.getElementById('main-content');
+  const tutorialOverlay = document.getElementById('tutorial-overlay');
+  const tutorialCloseBtn = document.getElementById('tutorial-close-btn');
+
+  // Show loading bar AFTER intro animation (3s)
+  setTimeout(() => {
+    loadingBarContainer.style.opacity = '1';
+    loadingBarContainer.style.transform = 'translateY(0)';
+    animateLoadingBar();
+  }, 3000);
+
+  // Animate loading bar width from 0% to 100% over 4 seconds
+  function animateLoadingBar(duration = 4000) {
+    let start = null;
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      const percent = Math.min(progress / duration * 100, 100);
+      loadingBar.style.width = percent + '%';
+      loadingBarContainer.setAttribute('aria-valuenow', Math.floor(percent));
+      if (progress < duration) {
+        window.requestAnimationFrame(step);
+      } else {
+        loadingComplete();
+      }
+    }
+    window.requestAnimationFrame(step);
+  }
+
+  // When loading is done, fade out intro container and show main + tutorial
+  function loadingComplete() {
+    introContainer.style.transition = 'opacity 1s ease';
+    introContainer.style.opacity = '0';
+
+    setTimeout(() => {
+      introContainer.style.display = 'none';
+      mainContent.style.display = 'block';
+      mainContent.style.animation = 'fadeInContent 1s forwards';
+
+      tutorialOverlay.style.display = 'flex';
+    }, 1000);
+  }
+
+  // Close tutorial overlay on button click
+  tutorialCloseBtn.addEventListener('click', () => {
+    tutorialOverlay.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
